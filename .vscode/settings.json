@@ -1,0 +1,8 @@
+{
+  "python.defaultInterpreterPath": "/Users/benjaminkeller/Desktop/GitHub/IT-Ticket-Project/.venv/bin/python",
+  "python.pythonPath": "/Users/benjaminkeller/Desktop/GitHub/IT-Ticket-Project/.venv/bin/python",
+  "python.analysis.extraPaths": ["IT Ticket Project"],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingModuleSource": "none"
+  }
+}

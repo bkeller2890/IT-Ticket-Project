@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.localized
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# SQLite DB
+*.db
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Archives and documents
+*.pdf
+*.docx
+*.xlsx
+
+# Temporary files
+*.swp
+*~
+
+# Node / npm
+node_modules/
+
+# OS files
+.AppleDouble
+.LSOverride
+
+# Ignore user-specific project directories
+"App Projects/"
+"Google IT Support Course/"
+"IT Ticket Project/"
+
+# Other
+.Dockerfile.swp

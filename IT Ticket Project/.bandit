@@ -1,0 +1,2 @@
+[bandit]
+# project-level bandit config - keep minimal; CI invokes bandit with explicit flags

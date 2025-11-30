@@ -55,7 +55,8 @@ def home():
         total_pages=total_pages,
         search=search,
         filter_status=filter_status,
-        sort_by=sort_by
+    sort_by=sort_by,
+    STATUSES=STATUSES
     )
 
 # -------------------------
@@ -70,12 +71,12 @@ def create_ticket_route():
         if not success:
             for e in errors:
                 flash(e, "danger")
-            return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES)
+            return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES)
 
         flash("Ticket created!", "success")
         return redirect(url_for("tickets.home"))
 
-    return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES)
+    return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES)
 
 # -------------------------
 # Update Ticket
