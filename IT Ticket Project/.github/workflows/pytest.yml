@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('IT Ticket Project/requirements-dev.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -28,20 +28,23 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('IT Ticket Project/.pre-commit-config.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pre-commit-
 
       - name: Install dependencies
         run: |
+          cd "IT Ticket Project"
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
       - name: Run pre-commit hooks (auto-fix)
         run: |
+          cd "IT Ticket Project"
           python -m pre_commit run --all-files || true
       - name: Fail if pre-commit would change files
         run: |
+          cd "IT Ticket Project"
           if [ -n "$(git status --porcelain)" ]; then
             echo "pre-commit would modify tracked files. Run 'pre-commit run --all-files' locally and commit the fixes.";
             git --no-pager status --porcelain
@@ -52,6 +55,7 @@ jobs:
 
       - name: Run tests
         run: |
+          cd "IT Ticket Project"
           pytest -q tests
 
   lint:
@@ -68,9 +72,11 @@ jobs:
           pip install ruff pre-commit
       - name: Run pre-commit (lint)
         run: |
+          cd "IT Ticket Project"
           python -m pre_commit run --all-files
       - name: Run ruff
         run: |
+          cd "IT Ticket Project"
           ruff check .
 
   security:
@@ -83,11 +89,14 @@ jobs:
           python-version: '3.11'
       - name: Install security tools
         run: |
+          cd "IT Ticket Project"
           python -m pip install --upgrade pip
           pip install bandit safety
       - name: Run bandit (skip B101 in tests)
         run: |
+          cd "IT Ticket Project"
           bandit -r . -q --skip B101
       - name: Run safety
         run: |
+          cd "IT Ticket Project"
           safety check
