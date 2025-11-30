@@ -1,16 +1,14 @@
 # routes/tickets.py
-from flask import Blueprint, request, render_template, redirect, url_for, flash
-from services.ticket_service import (
-    create_ticket_service,
-    update_ticket_service,
-    delete_ticket_service,
-    list_tickets_service,
-    count_tickets_service,
-    get_ticket_service
-)
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from models.ticket_model import PRIORITIES, STATUSES
+from services.ticket_service import (count_tickets_service,
+                                     create_ticket_service,
+                                     delete_ticket_service, get_ticket_service,
+                                     list_tickets_service,
+                                     update_ticket_service)
 
 bp = Blueprint("tickets", __name__)
+
 
 # -------------------------
 # Helper
@@ -21,8 +19,9 @@ def get_ticket_form():
         "title": request.form.get("title", "").strip(),
         "description": request.form.get("description", "").strip(),
         "priority": request.form.get("priority"),
-        "status": request.form.get("status")
+        "status": request.form.get("status"),
     }
+
 
 # -------------------------
 # Home / List Tickets
@@ -40,12 +39,9 @@ def home():
         sort_by=sort_by,
         search=search,
         page=page,
-        per_page=per_page
+        per_page=per_page,
     )
-    total = count_tickets_service(
-        filter_status=filter_status,
-        search=search
-    )
+    total = count_tickets_service(filter_status=filter_status, search=search)
     total_pages = (total + per_page - 1) // per_page
 
     return render_template(
@@ -55,9 +51,10 @@ def home():
         total_pages=total_pages,
         search=search,
         filter_status=filter_status,
-    sort_by=sort_by,
-    STATUSES=STATUSES
+        sort_by=sort_by,
+        STATUSES=STATUSES,
     )
+
 
 # -------------------------
 # Create Ticket
@@ -67,16 +64,26 @@ def create_ticket_route():
     ticket = {"title": "", "description": "", "priority": ""}
     if request.method == "POST":
         ticket = get_ticket_form()
-        success, errors = create_ticket_service(ticket["title"], ticket["description"], ticket["priority"])
+        success, errors = create_ticket_service(
+            ticket["title"], ticket["description"], ticket["priority"]
+        )
         if not success:
             for e in errors:
                 flash(e, "danger")
-            return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES)
+            return render_template(
+                "create_ticket.html",
+                ticket=ticket,
+                PRIORITIES=PRIORITIES,
+                STATUSES=STATUSES,
+            )
 
         flash("Ticket created!", "success")
         return redirect(url_for("tickets.home"))
 
-    return render_template("create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES)
+    return render_template(
+        "create_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES
+    )
+
 
 # -------------------------
 # Update Ticket
@@ -95,7 +102,7 @@ def update_ticket_route(ticket_id):
             form_data["title"],
             form_data["description"],
             form_data["priority"],
-            form_data["status"]
+            form_data["status"],
         )
         if not success:
             for e in errors:
@@ -104,13 +111,16 @@ def update_ticket_route(ticket_id):
                 "update_ticket.html",
                 ticket=form_data,
                 PRIORITIES=PRIORITIES,
-                STATUSES=STATUSES
+                STATUSES=STATUSES,
             )
 
         flash("Ticket updated!", "success")
         return redirect(url_for("tickets.home"))
 
-    return render_template("update_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES)
+    return render_template(
+        "update_ticket.html", ticket=ticket, PRIORITIES=PRIORITIES, STATUSES=STATUSES
+    )
+
 
 # -------------------------
 # Delete Ticket

@@ -1,8 +1,9 @@
-from flask import Flask
-from config import SECRET_KEY
-from routes.tickets import bp as tickets_bp
-from database import close_db
 import os
+
+from config import SECRET_KEY
+from database import close_db
+from flask import Flask
+from routes.tickets import bp as tickets_bp
 
 
 def create_app():

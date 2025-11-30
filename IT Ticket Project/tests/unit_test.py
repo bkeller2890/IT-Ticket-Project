@@ -1,7 +1,11 @@
-import unittest
 import sqlite3
+import unittest
 from unittest.mock import patch
-from tests.ticket_tester import create_ticket_db, view_tickets_db, update_ticket_status_db, delete_ticket_db, setup_db, main
+
+from tests.ticket_tester import (create_ticket_db, delete_ticket_db, main,
+                                 setup_db, update_ticket_status_db,
+                                 view_tickets_db)
+
 
 class TestTicketSystem(unittest.TestCase):
     @classmethod
@@ -37,7 +41,8 @@ class TestTicketSystem(unittest.TestCase):
         self.assertEqual(len(tickets), 0)
 
     def test_filter_by_status(self):
-        tid1 = create_ticket_db("Ticket1", "Open ticket", "Low", self.conn)
+        # Create two tickets; only the second will be closed for filtering
+        create_ticket_db("Ticket1", "Open ticket", "Low", self.conn)
         tid2 = create_ticket_db("Ticket2", "Closed ticket", "Medium", self.conn)
         update_ticket_status_db(tid2, "Closed", self.conn)
         closed_tickets = view_tickets_db(self.conn, filter_status="Closed")
@@ -61,7 +66,9 @@ class TestTicketSystem(unittest.TestCase):
         self.assertEqual(results[0][1], "Server Issue")
 
     def test_update_invalid_ticket(self):
-        rows = update_ticket_status_db(9999, "Closed", self.conn)  # ID that doesn't exist
+        rows = update_ticket_status_db(
+            9999, "Closed", self.conn
+        )  # ID that doesn't exist
         self.assertEqual(rows, 0)  # No rows should be updated
 
     def test_delete_invalid_ticket(self):
@@ -70,12 +77,16 @@ class TestTicketSystem(unittest.TestCase):
 
     def test_search_no_results(self):
         create_ticket_db("Network Issue", "Internet is slow", "Medium", self.conn)
-        results = view_tickets_db(self.conn, search_keyword="Server")  # No matching ticket
+        results = view_tickets_db(
+            self.conn, search_keyword="Server"
+        )  # No matching ticket
         self.assertEqual(len(results), 0)
 
     def test_filter_status_no_match(self):
         create_ticket_db("Ticket1", "Open ticket", "Low", self.conn)
-        closed_tickets = view_tickets_db(self.conn, filter_status="Closed")  # No closed tickets yet
+        closed_tickets = view_tickets_db(
+            self.conn, filter_status="Closed"
+        )  # No closed tickets yet
         self.assertEqual(len(closed_tickets), 0)
 
     def test_priority_sort_case_insensitive(self):
@@ -86,10 +97,11 @@ class TestTicketSystem(unittest.TestCase):
         self.assertEqual(tickets[0][3].capitalize(), "High")
         self.assertEqual(tickets[1][3].capitalize(), "Medium")
         self.assertEqual(tickets[2][3].capitalize(), "Low")
-    
+
     def test_empty_database(self):
         tickets = view_tickets_db(self.conn)
         self.assertEqual(len(tickets), 0)
+
 
 class TestInteractiveMenu(unittest.TestCase):
     @patch("builtins.input", side_effect=["1", "Test Ticket", "Desc", "High", "8"])
@@ -97,7 +109,7 @@ class TestInteractiveMenu(unittest.TestCase):
     def test_create_ticket_via_menu(self, mock_print, mock_input):
         conn = sqlite3.connect(":memory:")
         setup_db(conn)
-        
+
         main(conn=conn)  # run menu with simulated inputs
 
         # Verify ticket was created

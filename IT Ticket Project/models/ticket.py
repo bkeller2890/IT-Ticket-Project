@@ -4,24 +4,33 @@
 # CRUD Operations
 # -------------------------
 
+
 def create_ticket(conn, title: str, description: str, priority: str) -> int:
     """Insert a new ticket with default status 'Open'. Returns the newly created ticket ID."""
     with conn:
-        cur = conn.execute("""
+        cur = conn.execute(
+            """
             INSERT INTO tickets (title, description, priority, status)
             VALUES (?, ?, ?, 'Open')
-        """, (title, description, priority))
+        """,
+            (title, description, priority),
+        )
         return cur.lastrowid
 
 
-def update_ticket(conn, ticket_id: int, title: str, description: str, priority: str, status: str) -> int:
+def update_ticket(
+    conn, ticket_id: int, title: str, description: str, priority: str, status: str
+) -> int:
     """Update an existing ticket. Returns the number of rows affected."""
     with conn:
-        cur = conn.execute("""
-            UPDATE tickets 
+        cur = conn.execute(
+            """
+            UPDATE tickets
             SET title=?, description=?, priority=?, status=?, updated_at=CURRENT_TIMESTAMP
             WHERE id=?
-        """, (title, description, priority, status, ticket_id))
+        """,
+            (title, description, priority, status, ticket_id),
+        )
         return cur.rowcount
 
 
@@ -40,10 +49,13 @@ def get_ticket(conn, ticket_id: int):
         return None
     # Convert sqlite3.Row to a simple object with attribute access
     from types import SimpleNamespace
+
     return SimpleNamespace(**dict(row))
 
 
-def list_tickets(conn, filter_status=None, sort_by=None, search=None, offset=0, limit=10):
+def list_tickets(
+    conn, filter_status=None, sort_by=None, search=None, offset=0, limit=10
+):
     """
     Retrieve a list of tickets with optional filtering, search, sorting, and pagination.
     """
@@ -68,6 +80,7 @@ def list_tickets(conn, filter_status=None, sort_by=None, search=None, offset=0, 
     cur = conn.execute(query, params)
     rows = cur.fetchall()
     from types import SimpleNamespace
+
     return [SimpleNamespace(**dict(r)) for r in rows]
 
 

@@ -1,4 +1,6 @@
-def validate_ticket(title, description, priority, status=None, PRIORITIES=None, STATUSES=None):
+def validate_ticket(
+    title, description, priority, status=None, PRIORITIES=None, STATUSES=None
+):
     errors = []
 
     if not title or len(title) > 100:

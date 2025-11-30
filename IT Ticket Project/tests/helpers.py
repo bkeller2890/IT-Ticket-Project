@@ -11,7 +11,8 @@ def get_connection(path=":memory:"):
 
 def setup_db(conn):
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS tickets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
@@ -21,11 +22,14 @@ def setup_db(conn):
             created_at TEXT,
             updated_at TEXT
         )
-    """)
+    """
+    )
     conn.commit()
 
 
-def _create_ticket_db(title, description, priority, status, created_at, updated_at, conn):
+def _create_ticket_db(
+    title, description, priority, status, created_at, updated_at, conn
+):
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -49,12 +53,16 @@ def create_ticket_db(title, description, priority, *args):
     # New-style call: create_ticket_db(title, description, priority, status, created_at, updated_at, conn)
     if len(args) == 4:
         status, created_at, updated_at, conn = args
-        return _create_ticket_db(title, description, priority, status, created_at, updated_at, conn)
+        return _create_ticket_db(
+            title, description, priority, status, created_at, updated_at, conn
+        )
 
     raise TypeError("create_ticket_db called with unsupported signature")
 
 
-def view_tickets_db(conn, filter_status=None, sort_by=None, search_keyword=None, page=1, per_page=10):
+def view_tickets_db(
+    conn, filter_status=None, sort_by=None, search_keyword=None, page=1, per_page=10
+):
     cursor = conn.cursor()
     query = "SELECT * FROM tickets"
     filters = []
@@ -107,11 +115,12 @@ def get_ticket_count(conn, filter_status=None, search_keyword=None):
     return cursor.fetchone()[0]
 
 
-def update_ticket_db(ticket_id, title=None, description=None, priority=None, status=None, conn=None):
+def update_ticket_db(
+    ticket_id, title=None, description=None, priority=None, status=None, conn=None
+):
     """Safe update that whitelists columns before building SQL to avoid dynamic injection."""
     cursor = conn.cursor()
     fields = []
-    params = []
 
     if title is not None:
         fields.append(("title", title))
@@ -187,5 +196,13 @@ def main(conn=None):
         title = input()
         desc = input()
         priority = input()
-        create_ticket_db(title, desc, priority, "Open", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime.now().strftime("%Y-%m-%d %H:%M:%S"), conn)
+        create_ticket_db(
+            title,
+            desc,
+            priority,
+            "Open",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            conn,
+        )
     return

@@ -1,13 +1,8 @@
 import sqlite3
+
 import pytest
-from tests.helpers import (
-    create_ticket_db,
-    view_tickets_db,
-    update_ticket_status_db,
-    delete_ticket_db,
-    setup_db,
-    main,
-)
+from tests.helpers import (create_ticket_db, delete_ticket_db, main, setup_db,
+                           update_ticket_status_db, view_tickets_db)
 
 
 @pytest.fixture
@@ -109,7 +104,7 @@ def test_empty_database(conn):
 
 def test_create_ticket_via_menu(monkeypatch, conn):
     inputs = iter(["1", "Test Ticket", "Desc", "High", "8"])
-    monkeypatch.setattr('builtins.input', lambda: next(inputs))
+    monkeypatch.setattr("builtins.input", lambda: next(inputs))
     main(conn=conn)
     tickets = view_tickets_db(conn)
     assert len(tickets) == 1

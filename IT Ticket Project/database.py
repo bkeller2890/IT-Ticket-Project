@@ -1,6 +1,7 @@
 import sqlite3
-from flask import g
 from contextlib import contextmanager
+
+from flask import g
 
 
 # -------------------------
@@ -14,7 +15,8 @@ def get_connection(db_name="tickets.db"):
 
 def setup_db(conn):
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS tickets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
@@ -24,7 +26,8 @@ def setup_db(conn):
             created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
-    """)
+    """
+    )
     conn.commit()
 
 
