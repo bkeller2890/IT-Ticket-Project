@@ -1,14 +1,8 @@
 import sqlite3
 
 import pytest
-from tests.helpers import (
-    create_ticket_db,
-    delete_ticket_db,
-    main,
-    setup_db,
-    update_ticket_status_db,
-    view_tickets_db,
-)
+from tests.helpers import (create_ticket_db, delete_ticket_db, main, setup_db,
+                           update_ticket_status_db, view_tickets_db)
 
 
 @pytest.fixture

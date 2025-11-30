@@ -1,14 +1,11 @@
 # routes/tickets.py
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from models.ticket_model import PRIORITIES, STATUSES
-from services.ticket_service import (
-    count_tickets_service,
-    create_ticket_service,
-    delete_ticket_service,
-    get_ticket_service,
-    list_tickets_service,
-    update_ticket_service,
-)
+from services.ticket_service import (count_tickets_service,
+                                     create_ticket_service,
+                                     delete_ticket_service, get_ticket_service,
+                                     list_tickets_service,
+                                     update_ticket_service)
 
 bp = Blueprint("tickets", __name__)
 
