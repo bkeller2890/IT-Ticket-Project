@@ -40,12 +40,20 @@ jobs:
         run: |
           echo "--- Debug: python info ---"
           python -V
-          echo "--- Debug: pip list ---"
-          python -m pip list --format=columns
+          echo "--- Debug: python executable ---"
+          python -c "import sys; print(sys.executable)"
+          echo "--- Debug: sys.path ---"
+          python -c "import sys, json; print(json.dumps(sys.path))"
+          echo "--- Debug: env vars (short list) ---"
+          env | sort | sed -n '1,200p'
+          echo "--- Debug: pip freeze ---"
+          python -m pip freeze | sed -n '1,200p'
+          echo "--- Debug: sqlite3 version ---"
+          python -c "import sqlite3; print(sqlite3.sqlite_version)"
           echo "--- Debug: show git status (pre-commit changes) ---"
           git status --porcelain || true
           git --no-pager diff --name-only || true
-          echo "--- Running pytest ---"
+          echo "--- Running pytest (verbose) ---"
           pytest -q -vv
 
   lint:
