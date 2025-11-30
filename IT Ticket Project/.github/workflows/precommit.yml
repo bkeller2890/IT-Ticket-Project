@@ -1,0 +1,32 @@
+name: Pre-commit
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  precommit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install pre-commit
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Run pre-commit (report diffs)
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI"
+          pre-commit run --all-files || true
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "pre-commit would change files; failing.";
+            git --no-pager status --porcelain
+            git --no-pager diff --no-prefix
+            exit 1
+          fi
