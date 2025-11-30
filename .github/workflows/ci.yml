@@ -54,10 +54,10 @@ jobs:
           pip install ruff pre-commit
       - name: Run pre-commit (lint)
         run: |
-          python -m pre_commit run --all-files
+          cd "IT Ticket Project" && python -m pre_commit run --all-files
       - name: Run ruff
         run: |
-          ruff check .
+          cd "IT Ticket Project" && ruff check .
 
   security:
     runs-on: ubuntu-latest
