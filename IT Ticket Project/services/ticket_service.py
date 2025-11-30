@@ -2,8 +2,14 @@
 from typing import Any, List, Optional, Tuple
 
 from database import db_session
-from models.ticket import (count_tickets, create_ticket, delete_ticket,
-                           get_ticket, list_tickets, update_ticket)
+from models.ticket import (
+    count_tickets,
+    create_ticket,
+    delete_ticket,
+    get_ticket,
+    list_tickets,
+    update_ticket,
+)
 from models.ticket_model import PRIORITIES, STATUSES
 from validators import validate_ticket
 
