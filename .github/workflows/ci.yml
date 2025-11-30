@@ -24,14 +24,13 @@ jobs:
           python -m pip install -e "IT Ticket Project"
           python -m pip install -r "IT Ticket Project/requirements-dev.txt"
 
-      - name: Run formatting checks (black / isort)
+      - name: Run pre-commit checks (check-only)
         run: |
           cd "IT Ticket Project"
           python -m pip install --upgrade pip
-          python -m pip install black isort ruff
-          # Run check-only to avoid modifying files in CI; show helpful message on failure
-          black --check . || { echo "black would reformat files. Run 'black .' locally and commit the changes."; exit 1; }
-          isort --check-only . || { echo "isort would reformat files. Run 'isort .' locally and commit the changes."; exit 1; }
+          python -m pip install pre-commit
+          # Run pre-commit in check-only mode which uses the pinned hook versions
+          python -m pre_commit run --all-files --show-diff-on-failure --show-stage || { echo "pre-commit hooks would modify files. Run 'pre-commit run --all-files' locally and commit the fixes."; exit 1; }
 
       - name: Run tests
         run: |
@@ -65,13 +64,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff pre-commit
-      - name: Run formatting checks (black / isort)
+      - name: Run pre-commit checks (check-only)
         run: |
           cd "IT Ticket Project"
           python -m pip install --upgrade pip
-          python -m pip install black isort ruff
-          black --check . || { echo "black would reformat files. Run 'black .' locally and commit the changes."; exit 1; }
-          isort --check-only . || { echo "isort would reformat files. Run 'isort .' locally and commit the changes."; exit 1; }
+          python -m pip install pre-commit
+          python -m pre_commit run --all-files --show-diff-on-failure --show-stage || { echo "pre-commit hooks would modify files. Run 'pre-commit run --all-files' locally and commit the fixes."; exit 1; }
       - name: Run ruff
         run: |
           cd "IT Ticket Project" && ruff check .
