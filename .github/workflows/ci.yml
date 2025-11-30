@@ -38,7 +38,15 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -q
+          echo "--- Debug: python info ---"
+          python -V
+          echo "--- Debug: pip list ---"
+          python -m pip list --format=columns
+          echo "--- Debug: show git status (pre-commit changes) ---"
+          git status --porcelain || true
+          git --no-pager diff --name-only || true
+          echo "--- Running pytest ---"
+          pytest -q -vv
 
   lint:
     runs-on: ubuntu-latest
@@ -52,9 +60,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff pre-commit
-      - name: Run pre-commit (lint)
+      - name: Run pre-commit (lint check-only)
         run: |
-          cd "IT Ticket Project" && python -m pre_commit run --all-files
+          cd "IT Ticket Project"
+          # Run pre-commit in check-only mode (show diffs on failure). Exit non-zero if any hooks would change files.
+          python -m pre_commit run --all-files --show-diff-on-failure
       - name: Run ruff
         run: |
           cd "IT Ticket Project" && ruff check .
