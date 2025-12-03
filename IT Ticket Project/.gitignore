@@ -42,3 +42,5 @@ node_modules/
 .Dockerfile.swp
 
 home_screenshot.png
+
+.DS_Store
